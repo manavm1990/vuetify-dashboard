@@ -6,7 +6,14 @@
       :items="desserts"
       :items-per-page="5"
       class="elevation-1"
+      @click:row="selectRow"
     ></v-data-table>
+    <v-snackbar v-model="snackbar">
+      You have selected {{ currentRow }}
+      <v-btn color="pink" text @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -108,8 +115,16 @@ export default {
           protein: 7,
           iron: "6%"
         }
-      ]
+      ],
+      snackbar: false,
+      currentRow: ""
     };
+  },
+  methods: {
+    selectRow(row) {
+      this.currentRow = row.name;
+      this.snackbar = true;
+    }
   }
 };
 </script>
