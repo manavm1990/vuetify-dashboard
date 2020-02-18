@@ -5,8 +5,8 @@
         Vuetify Toolbar
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn color="white" text rounded>Home</v-btn>
-      <v-btn color="white" text rounded>About</v-btn>
+      <v-btn color="white" text rounded to="/">Home</v-btn>
+      <v-btn color="white" text rounded to="/login">Login</v-btn>
     </v-app-bar>
 
     <v-content>
