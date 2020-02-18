@@ -56,16 +56,18 @@ export default {
     };
   },
   created() {
-    Object.keys(this.db).map(dataKey => {
-      api
-        .fetchData(dataKey)
-        .then(data => {
-          this.db[dataKey] = data;
+    // The ordering of the properties is the same as that given by looping over the properties of the object manually. (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)
+    const dataKeys = Object.keys(this.db);
+    // Order is preserved. (https://stackoverflow.com/questions/28066429/promise-all-order-of-resolved-values)
+    Promise.all(dataKeys.map(dataKey => api.fetchData(dataKey)))
+      .then(results =>
+        results.forEach((result, i) => {
+          this.db[dataKeys[i]] = result;
         })
-        .catch(err => {
-          console.error(`Error parsing JSON! ${err.message}`);
-        });
-    });
+      )
+      .catch(err => {
+        console.error(`Error processing JSON! ${err.message}`);
+      });
   },
   methods: {
     setEmployee(event) {
