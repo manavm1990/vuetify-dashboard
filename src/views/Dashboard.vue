@@ -8,6 +8,7 @@
       class="elevation-1"
       @click:row="selectRow"
       v-if="employees"
+      multi-sort
     ></v-data-table>
     <v-snackbar v-model="snackbar">
       You have selected {{ currentRow }}
