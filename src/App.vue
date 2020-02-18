@@ -1,6 +1,14 @@
 <template>
   <v-app>
-    <v-card><h1 class="display-1">Fat Stuff!</h1> </v-card>
+    <v-app-bar app color="primary" dark>
+      <v-toolbar-title>
+        Vuetify Toolbar
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn color="white" text rounded>Home</v-btn>
+      <v-btn color="white" text rounded>About</v-btn>
+    </v-app-bar>
+
     <v-content>
       <v-card width="400" class="mx-auto mt-5">
         <v-card-title>
