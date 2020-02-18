@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import EmployeesTable from "../components/EmployeesTable";
-import EventTimeline from "../components/EventTimeline";
-import SalesGraph from "../components/SalesGraph";
-import StatisticCard from "../components/StatisticCard";
+import EmployeesTable from "@/components/EmployeesTable";
+import EventTimeline from "@/components/EventTimeline";
+import SalesGraph from "@/components/SalesGraph";
+import StatisticCard from "@/components/StatisticCard";
 
 import api from "@/api/data";
 
