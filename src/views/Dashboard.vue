@@ -1,17 +1,22 @@
 <template>
   <div>
     <h1>Dashboard</h1>
-    <v-data-table
-      :headers="headers"
-      :items="employees"
-      :items-per-page="5"
-      class="elevation-1"
-      @click:row="selectRow"
-      v-if="employees"
-      multi-sort
-    ></v-data-table>
+
+    <SalesGraph v-for="sale in sales" :key="`${sale.title}`" :sale="sale" />
+
+    <StatisticCard
+      v-for="statistic in statistics"
+      :key="`${statistic.title}`"
+      :statistic="statistic"
+    />
+
+    <EmployeesTable :employees="employees" @select-employee="setEmployee" />
+
+    <EventTimeline :timeline="timeline" />
+
     <v-snackbar v-model="snackbar">
-      You have selected {{ currentRow }}
+      You have selected {{ selectedEmployee.name }},
+      {{ selectedEmployee.title }}
       <v-btn color="pink" text @click="snackbar = false">
         Close
       </v-btn>
@@ -20,40 +25,42 @@
 </template>
 
 <script>
-import api from "@/api/employees";
+import EmployeesTable from "../components/EmployeesTable";
+import EventTimeline from "../components/EventTimeline";
+import SalesGraph from "../components/SalesGraph";
+import StatisticCard from "../components/StatisticCard";
 
-import NProgress from "nprogress";
+import employeesData from "../data/employees.json";
+import timelineData from "../data/timeline.json";
+import salesData from "../data/sales.json";
+import statisticsData from "../data/statistics.json";
 
 export default {
+  name: "DashboardPage",
+  components: {
+    EmployeesTable,
+    EventTimeline,
+    SalesGraph,
+    StatisticCard
+  },
   data() {
     return {
-      headers: [
-        {
-          text: "Employee ID",
-          align: "left",
-          sortable: false,
-          value: "id"
-        },
-        { text: "Name", value: "name" },
-        { text: "Title", value: "title" },
-        { text: "Salary", value: "salary" }
-      ],
-      employees: null,
+      employees: employeesData,
+      sales: salesData,
+      selectedEmployee: {
+        name: "",
+        title: ""
+      },
       snackbar: false,
-      currentRow: ""
+      statistics: statisticsData,
+      timeline: timelineData
     };
   },
-  created() {
-    NProgress.start();
-    api.getEmployees().then(employees => {
-      NProgress.done();
-      this.employees = employees;
-    });
-  },
   methods: {
-    selectRow(row) {
-      this.currentRow = `${row.title} ${row.name}`;
+    setEmployee(event) {
       this.snackbar = true;
+      this.selectedEmployee.name = event.name;
+      this.selectedEmployee.title = event.title;
     }
   }
 };
