@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     selectRow(row) {
-      this.currentRow = row.name;
+      this.currentRow = `${row.title} ${row.name}`;
       this.snackbar = true;
     }
   }
