@@ -32,6 +32,8 @@ import StatisticCard from "@/components/StatisticCard";
 
 import api from "@/api/data";
 
+import NProgress from "nprogress";
+
 export default {
   name: "DashboardPage",
   components: {
@@ -56,16 +58,19 @@ export default {
     };
   },
   created() {
+    NProgress.start();
     // The ordering of the properties is the same as that given by looping over the properties of the object manually. (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)
     const dataKeys = Object.keys(this.db);
     // Order is preserved. (https://stackoverflow.com/questions/28066429/promise-all-order-of-resolved-values)
     Promise.all(dataKeys.map(dataKey => api.fetchData(dataKey)))
-      .then(results =>
+      .then(results => {
+        NProgress.done();
         results.forEach((result, i) => {
           this.db[dataKeys[i]] = result;
-        })
-      )
+        });
+      })
       .catch(err => {
+        NProgress.done();
         console.error(`Error processing JSON! ${err.message}`);
       });
   },
