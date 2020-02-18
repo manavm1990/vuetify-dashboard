@@ -64,5 +64,5 @@ export default {
       showPassword: false
     };
   }
-}
-</style>
+};
+</script>
