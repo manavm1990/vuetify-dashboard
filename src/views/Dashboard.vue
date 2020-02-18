@@ -63,7 +63,7 @@ export default {
           this.db[dataKey] = data;
         })
         .catch(err => {
-          console.error(`Error parsing JSON! ${err}`);
+          console.error(`Error parsing JSON! ${err.message}`);
         });
     });
   },
