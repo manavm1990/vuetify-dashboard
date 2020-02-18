@@ -2,17 +2,17 @@
   <div>
     <h1>Dashboard</h1>
 
-    <SalesGraph v-for="sale in sales" :key="`${sale.title}`" :sale="sale" />
+    <SalesGraph v-for="sale in db.sales" :key="`${sale.title}`" :sale="sale" />
 
     <StatisticCard
-      v-for="statistic in statistics"
+      v-for="statistic in db.statistics"
       :key="`${statistic.title}`"
       :statistic="statistic"
     />
 
-    <EmployeesTable :employees="employees" @select-employee="setEmployee" />
+    <EmployeesTable :employees="db.employees" @select-employee="setEmployee" />
 
-    <EventTimeline :timeline="timeline" />
+    <EventTimeline :timeline="db.timeline" />
 
     <v-snackbar v-model="snackbar">
       You have selected {{ selectedEmployee.name }},
@@ -30,10 +30,7 @@ import EventTimeline from "../components/EventTimeline";
 import SalesGraph from "../components/SalesGraph";
 import StatisticCard from "../components/StatisticCard";
 
-import employeesData from "../data/employees.json";
-import timelineData from "../data/timeline.json";
-import salesData from "../data/sales.json";
-import statisticsData from "../data/statistics.json";
+import api from "@/api/data";
 
 export default {
   name: "DashboardPage",
@@ -45,16 +42,30 @@ export default {
   },
   data() {
     return {
-      employees: employeesData,
-      sales: salesData,
+      db: {
+        employees: [],
+        sales: [],
+        statistics: [],
+        timeline: []
+      },
       selectedEmployee: {
         name: "",
         title: ""
       },
-      snackbar: false,
-      statistics: statisticsData,
-      timeline: timelineData
+      snackbar: false
     };
+  },
+  created() {
+    Object.keys(this.db).map(dataKey => {
+      api
+        .fetchData(dataKey)
+        .then(data => {
+          this.db[dataKey] = data;
+        })
+        .catch(err => {
+          console.error(`Error parsing JSON! ${err}`);
+        });
+    });
   },
   methods: {
     setEmployee(event) {
