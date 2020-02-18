@@ -22,6 +22,8 @@
 <script>
 import api from "@/api/employees";
 
+import NProgress from "nprogress";
+
 export default {
   data() {
     return {
@@ -42,7 +44,9 @@ export default {
     };
   },
   created() {
+    NProgress.start();
     api.getEmployees().then(employees => {
+      NProgress.done();
       this.employees = employees;
     });
   },
