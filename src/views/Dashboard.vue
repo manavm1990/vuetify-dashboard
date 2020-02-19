@@ -1,27 +1,47 @@
 <template>
-  <div>
+  <v-container>
     <h1>Dashboard</h1>
 
-    <SalesGraph v-for="sale in db.sales" :key="`${sale.title}`" :sale="sale" />
+    <v-row v-if="db.sales">
+      <!-- Don't nest content directly into a v-row. That's just for organizational purposes. Put in 'v-col.'-->
+      <!-- We want to use 'v-for' to keep creating 'columns.' -->
+      <v-col v-for="sale in db.sales" :key="`${sale.title}`" cols="12" md="4">
+        <SalesGraph :sale="sale" />
+      </v-col>
+    </v-row>
 
-    <StatisticCard
-      v-for="statistic in db.statistics"
-      :key="`${statistic.title}`"
-      :statistic="statistic"
-    />
+    <v-row v-if="db.statistics">
+      <v-col
+        v-for="statistic in db.statistics"
+        :key="`${statistic.title}`"
+        cols="12"
+        md="6"
+        lg="3"
+      >
+        <StatisticCard :statistic="statistic" />
+      </v-col>
+    </v-row>
 
-    <EmployeesTable :employees="db.employees" @select-employee="setEmployee" />
+    <v-row>
+      <v-col v-if="db.employees" cols="12" md="8">
+        <EmployeesTable
+          :employees="db.employees"
+          @select-employee="setEmployee"
+        />
+      </v-col>
 
-    <EventTimeline :timeline="db.timeline" />
-
-    <v-snackbar v-model="snackbar">
+      <v-col v-if="db.timeline" cols="12" md="4">
+        <EventTimeline :timeline="db.timeline" />
+      </v-col>
+    </v-row>
+    <v-snackbar v-model="snackbar" :left="$vuetify.breakpoint.lgAndUp">
       You have selected {{ selectedEmployee.name }},
       {{ selectedEmployee.title }}
       <v-btn color="pink" text @click="snackbar = false">
         Close
       </v-btn>
     </v-snackbar>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -45,10 +65,10 @@ export default {
   data() {
     return {
       db: {
-        employees: [],
-        sales: [],
-        statistics: [],
-        timeline: []
+        employees: null,
+        sales: null,
+        statistics: null,
+        timeline: null
       },
       selectedEmployee: {
         name: "",
