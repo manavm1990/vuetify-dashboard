@@ -34,6 +34,30 @@
         <EventTimeline :timeline="db.timeline" />
       </v-col>
     </v-row>
+
+    <v-row id="below-the-fold" v-intersect="loadMoreContent">
+      <v-col v-if="db.employees" cols="12" md="8">
+        <EmployeesTable
+          :employees="db.employees"
+          @select-employee="setEmployee"
+        />
+      </v-col>
+
+      <v-col v-if="db.timeline" cols="12" md="4">
+        <EventTimeline :timeline="db.timeline" />
+      </v-col>
+    </v-row>
+
+    <v-row v-if="moreContent" id="more-content">
+      <v-col>
+        <v-skeleton-loader
+          ref="skeleton"
+          type="table"
+          class="mx-auto"
+        ></v-skeleton-loader>
+      </v-col>
+    </v-row>
+
     <v-snackbar v-model="snackbar" :left="$vuetify.breakpoint.lgAndUp">
       You have selected {{ selectedEmployee.name }},
       {{ selectedEmployee.title }}
@@ -70,6 +94,7 @@ export default {
         statistics: null,
         timeline: null
       },
+      moreContent: false,
       selectedEmployee: {
         name: "",
         title: ""
@@ -95,6 +120,9 @@ export default {
       });
   },
   methods: {
+    loadMoreContent(entries) {
+      this.moreContent = entries[0].isIntersecting;
+    },
     setEmployee(event) {
       this.snackbar = true;
       this.selectedEmployee.name = event.name;
